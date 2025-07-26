@@ -1,73 +1,79 @@
-import { useState, useMemo } from 'react';
-import { Product, ProductFilters, SortField, SortOrder, ViewMode } from '@/types/product';
-import { useProducts, useFilteredProducts } from '@/hooks/useProducts';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useMemo } from "react";
+import {
+  Product,
+  ProductFilters,
+  SortField,
+  SortOrder,
+  ViewMode,
+} from "@/types/product";
+import { useProducts, useFilteredProducts } from "@/hooks/useProducts";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useToast } from "@/hooks/use-toast";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
-import { ProductList } from '@/components/ProductList';
-import { ProductCard } from '@/components/ProductCard';
-import { FilterPanel } from '@/components/FilterPanel';
-import { ProductForm } from '@/components/ProductForm';
-import { ProductDetails } from '@/components/ProductDetails';
-import { DeleteConfirmation } from '@/components/DeleteConfirmation';
-import { Pagination } from '@/components/Pagination';
+import { ProductList } from "@/components/ProductList";
+import { ProductCard } from "@/components/ProductCard";
+import { FilterPanel } from "@/components/FilterPanel";
+import { ProductForm } from "@/components/ProductForm";
+import { ProductDetails } from "@/components/ProductDetails";
+import { DeleteConfirmation } from "@/components/DeleteConfirmation";
+import { Pagination } from "@/components/Pagination";
 
-import { 
-  Plus, 
-  Search, 
-  Grid3X3, 
-  List, 
-  SortAsc, 
+import {
+  Plus,
+  Search,
+  Grid3X3,
+  List,
+  SortAsc,
   SortDesc,
   Package,
-  Loader2
-} from 'lucide-react';
+  Loader2,
+} from "lucide-react";
 
 const ITEMS_PER_PAGE_OPTIONS = [6, 12, 24, 48];
 
 export const ProductManagement = () => {
   const { toast } = useToast();
-  const { 
-    products, 
-    isLoading, 
-    addProduct, 
-    updateProduct, 
-    deleteProduct, 
+  const {
+    products,
+    isLoading,
+    addProduct,
+    updateProduct,
+    deleteProduct,
     getProduct,
-    isNameUnique 
+    isNameUnique,
   } = useProducts();
 
   // State for filters and search
   const [filters, setFilters] = useState<ProductFilters>({
-    search: '',
-    categories: ['Skincare'],
-    status: 'all',
+    search: "",
+    brands: [],
+    status: "all",
     priceMin: undefined,
     priceMax: undefined,
-    stockLevel: 'all'
+    stockLevel: "all",
   });
 
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const debouncedSearch = useDebounce(searchInput, 300);
 
   // State for sorting
-  const [sortField, setSortField] = useState<SortField>('createdAt');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [sortField, setSortField] = useState<SortField>("createdAt");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   // State for view mode
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,15 +102,19 @@ export const ProductManagement = () => {
   // Pagination calculations
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   // Reset to first page when filters change
   const activeFiltersCount = useMemo(() => {
     let count = 0;
-    if (filters.categories.length > 0) count++;
-    if (filters.status !== 'all') count++;
-    if (filters.priceMin !== undefined || filters.priceMax !== undefined) count++;
-    if (filters.stockLevel !== 'all') count++;
+    if (filters.brands.length > 0) count++;
+    if (filters.status !== "all") count++;
+    if (filters.priceMin !== undefined || filters.priceMax !== undefined)
+      count++;
+    if (filters.stockLevel !== "all") count++;
     if (debouncedSearch.trim()) count++;
     return count;
   }, [filters, debouncedSearch]);
@@ -112,10 +122,10 @@ export const ProductManagement = () => {
   // Handlers
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortOrder('asc');
+      setSortOrder("asc");
     }
   };
 
@@ -137,31 +147,25 @@ export const ProductManagement = () => {
     setDeletingProduct(product);
   };
 
-  const handleFormSubmit = async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleFormSubmit = async (
+    data: Omit<Product, "id" | "createdAt" | "updatedAt">
+  ) => {
     setFormLoading(true);
-    
+
     try {
       if (editingProduct) {
-        updateProduct(editingProduct.id, data);
-        toast({
-          title: 'Product updated',
-          description: `${data.name} has been updated successfully.`,
-        });
+        await updateProduct(editingProduct.id, data);
       } else {
-        addProduct(data);
-        toast({
-          title: 'Product created',
-          description: `${data.name} has been created successfully.`,
-        });
+        await addProduct(data);
       }
-      
+
       setProductFormOpen(false);
       setEditingProduct(null);
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Something went wrong. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setFormLoading(false);
@@ -170,21 +174,17 @@ export const ProductManagement = () => {
 
   const handleDeleteConfirm = async () => {
     if (!deletingProduct) return;
-    
+
     setDeleteLoading(true);
-    
+
     try {
-      deleteProduct(deletingProduct.id);
-      toast({
-        title: 'Product deleted',
-        description: `${deletingProduct.name} has been deleted successfully.`,
-      });
+      await deleteProduct(deletingProduct.id);
       setDeletingProduct(null);
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'Failed to delete product. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to delete product. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setDeleteLoading(false);
@@ -193,7 +193,7 @@ export const ProductManagement = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleItemsPerPageChange = (newItemsPerPage: number) => {
@@ -229,7 +229,8 @@ export const ProductManagement = () => {
                 Product Management System
               </h1>
               <p className="text-muted-foreground mt-1">
-                Manage your product inventory with advanced filtering and search capabilities
+                Manage your product inventory with advanced filtering and search
+                capabilities
               </p>
             </div>
             <Button onClick={handleAddProduct} size="lg" className="shrink-0">
@@ -251,13 +252,19 @@ export const ProductManagement = () => {
                 />
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Select value={`${sortField}-${sortOrder}`} onValueChange={(value) => {
-                const [field, order] = value.split('-') as [SortField, SortOrder];
-                setSortField(field);
-                setSortOrder(order);
-              }}>
+              <Select
+                value={`${sortField}-${sortOrder}`}
+                onValueChange={(value) => {
+                  const [field, order] = value.split("-") as [
+                    SortField,
+                    SortOrder
+                  ];
+                  setSortField(field);
+                  setSortOrder(order);
+                }}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue />
                 </SelectTrigger>
@@ -275,17 +282,17 @@ export const ProductManagement = () => {
 
               <div className="flex items-center border rounded-md">
                 <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
+                  variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
-                  onClick={() => setViewMode('list')}
+                  onClick={() => setViewMode("list")}
                   className="rounded-r-none"
                 >
                   <List className="h-4 w-4" />
                 </Button>
                 <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                  variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => setViewMode("grid")}
                   className="rounded-l-none"
                 >
                   <Grid3X3 className="h-4 w-4" />
@@ -298,24 +305,26 @@ export const ProductManagement = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-card p-4 rounded-lg border">
-            <div className="text-2xl font-bold text-primary">{products.length}</div>
+            <div className="text-2xl font-bold text-primary">
+              {products.length}
+            </div>
             <div className="text-sm text-muted-foreground">Total Products</div>
           </div>
           <div className="bg-card p-4 rounded-lg border">
             <div className="text-2xl font-bold text-success">
-              {products.filter(p => p.status === 'Active').length}
+              {products.filter((p) => p.status === "Active").length}
             </div>
             <div className="text-sm text-muted-foreground">Active Products</div>
           </div>
           <div className="bg-card p-4 rounded-lg border">
             <div className="text-2xl font-bold text-warning">
-              {products.filter(p => p.stock > 0 && p.stock < 10).length}
+              {products.filter((p) => p.stock > 0 && p.stock < 10).length}
             </div>
             <div className="text-sm text-muted-foreground">Low Stock</div>
           </div>
           <div className="bg-card p-4 rounded-lg border">
             <div className="text-2xl font-bold text-destructive">
-              {products.filter(p => p.stock === 0).length}
+              {products.filter((p) => p.stock === 0).length}
             </div>
             <div className="text-sm text-muted-foreground">Out of Stock</div>
           </div>
@@ -329,6 +338,7 @@ export const ProductManagement = () => {
               filters={filters}
               onFiltersChange={setFilters}
               activeFiltersCount={activeFiltersCount}
+              products={products}
             />
           </div>
 
@@ -338,10 +348,14 @@ export const ProductManagement = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
-                  {filteredProducts.length} result{filteredProducts.length !== 1 ? 's' : ''}
+                  {filteredProducts.length} result
+                  {filteredProducts.length !== 1 ? "s" : ""}
                 </span>
                 {activeFiltersCount > 0 && (
-                  <Badge variant="secondary">{activeFiltersCount} filter{activeFiltersCount !== 1 ? 's' : ''}</Badge>
+                  <Badge variant="secondary">
+                    {activeFiltersCount} filter
+                    {activeFiltersCount !== 1 ? "s" : ""}
+                  </Badge>
                 )}
               </div>
             </div>
@@ -384,6 +398,7 @@ export const ProductManagement = () => {
         product={editingProduct}
         isLoading={formLoading}
         isNameUnique={isNameUnique}
+        products={products}
       />
 
       <ProductDetails

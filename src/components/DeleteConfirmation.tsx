@@ -1,6 +1,6 @@
-import { Product } from '@/types/product';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Product } from "@/types/product";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,8 +10,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { AlertTriangle, Loader2 } from "lucide-react";
 
 interface DeleteConfirmationProps {
   product: Product | null;
@@ -21,12 +21,12 @@ interface DeleteConfirmationProps {
   isLoading?: boolean;
 }
 
-export const DeleteConfirmation = ({ 
-  product, 
-  open, 
-  onClose, 
-  onConfirm, 
-  isLoading = false 
+export const DeleteConfirmation = ({
+  product,
+  open,
+  onClose,
+  onConfirm,
+  isLoading = false,
 }: DeleteConfirmationProps) => {
   if (!product) return null;
 
@@ -41,10 +41,11 @@ export const DeleteConfirmation = ({
           <AlertDialogDescription asChild>
             <div className="space-y-4">
               <p>
-                Are you sure you want to delete this product? This action cannot be undone 
-                and will permanently remove the product from your inventory.
+                Are you sure you want to delete this product? This action cannot
+                be undone and will permanently remove the product from your
+                inventory.
               </p>
-              
+
               {/* Product Details */}
               <div className="bg-muted p-4 rounded-lg space-y-2">
                 <div>
@@ -52,12 +53,14 @@ export const DeleteConfirmation = ({
                   <p className="text-sm">{product.name}</p>
                 </div>
                 <div className="flex gap-2 items-center">
-                  <span className="font-medium">Category:</span>
-                  <Badge variant="outline">{product.category}</Badge>
+                  <span className="font-medium">Brand:</span>
+                  <Badge variant="outline">{product.brand}</Badge>
                 </div>
                 <div className="flex gap-2 items-center">
                   <span className="font-medium">Price:</span>
-                  <span className="text-primary font-semibold">${product.price.toFixed(2)}</span>
+                  <span className="text-primary font-semibold">
+                    ${product.price.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex gap-2 items-center">
                   <span className="font-medium">Stock:</span>
@@ -66,21 +69,22 @@ export const DeleteConfirmation = ({
                 {product.description && (
                   <div>
                     <span className="font-medium">Description:</span>
-                    <p className="text-sm text-muted-foreground">{product.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {product.description}
+                    </p>
                   </div>
                 )}
               </div>
-              
+
               <p className="text-sm text-destructive">
-                <strong>Warning:</strong> This action is permanent and cannot be reversed.
+                <strong>Warning:</strong> This action is permanent and cannot be
+                reversed.
               </p>
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}

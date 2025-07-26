@@ -3,36 +3,34 @@ export interface Product {
   name: string;
   description?: string;
   price: number;
-  category: ProductCategory;
+  brand: string;
   status: ProductStatus;
   stock: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type ProductCategory = 'Skincare';
+export type ProductStatus = "Active" | "Inactive";
 
-export type ProductStatus = 'Active' | 'Inactive';
-
-export type SortField = 'name' | 'price' | 'stock' | 'createdAt';
-export type SortOrder = 'asc' | 'desc';
+export type SortField = "name" | "price" | "stock" | "createdAt";
+export type SortOrder = "asc" | "desc";
 
 export interface ProductFilters {
   search: string;
-  categories: ProductCategory[];
-  status: 'all' | ProductStatus;
+  brands: string[];
+  status: "all" | ProductStatus;
   priceMin?: number;
   priceMax?: number;
-  stockLevel: 'all' | 'low' | 'in-stock' | 'out-of-stock';
+  stockLevel: "all" | "low" | "in-stock" | "out-of-stock";
 }
 
 export interface ProductFormData {
   name: string;
   description: string;
   price: string;
-  category: ProductCategory;
+  brand: string;
   status: ProductStatus;
   stock: string;
 }
 
-export type ViewMode = 'list' | 'grid';
+export type ViewMode = "list" | "grid";

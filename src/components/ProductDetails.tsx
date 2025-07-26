@@ -1,25 +1,25 @@
-import { Product } from '@/types/product';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { 
+import { Product } from "@/types/product";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { 
-  Edit, 
-  ArrowLeft, 
-  Calendar, 
-  DollarSign, 
-  Package, 
+} from "@/components/ui/dialog";
+import {
+  Edit,
+  ArrowLeft,
+  Calendar,
+  DollarSign,
+  Package,
   Tag,
   AlertTriangle,
   CheckCircle,
-  XCircle
-} from 'lucide-react';
+  XCircle,
+} from "lucide-react";
 
 interface ProductDetailsProps {
   product: Product | null;
@@ -28,14 +28,19 @@ interface ProductDetailsProps {
   onEdit: (product: Product) => void;
 }
 
-export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetailsProps) => {
+export const ProductDetails = ({
+  product,
+  open,
+  onClose,
+  onEdit,
+}: ProductDetailsProps) => {
   if (!product) return null;
 
   const isLowStock = product.stock > 0 && product.stock < 10;
   const isOutOfStock = product.stock === 0;
 
   const getStatusIcon = () => {
-    if (product.status === 'Active') {
+    if (product.status === "Active") {
       return <CheckCircle className="h-5 w-5 text-success" />;
     }
     return <XCircle className="h-5 w-5 text-muted-foreground" />;
@@ -45,21 +50,21 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
     if (isOutOfStock) {
       return {
         icon: <XCircle className="h-5 w-5 text-destructive" />,
-        text: 'Out of Stock',
-        variant: 'destructive' as const
+        text: "Out of Stock",
+        variant: "destructive" as const,
       };
     }
     if (isLowStock) {
       return {
         icon: <AlertTriangle className="h-5 w-5 text-warning" />,
         text: `Low Stock (${product.stock} remaining)`,
-        variant: 'warning' as const
+        variant: "warning" as const,
       };
     }
     return {
       icon: <CheckCircle className="h-5 w-5 text-success" />,
       text: `${product.stock} in stock`,
-      variant: 'success' as const
+      variant: "success" as const,
     };
   };
 
@@ -92,18 +97,22 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
           {/* Header Section */}
           <div className="space-y-4">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">{product.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                {product.name}
+              </h1>
               <p className="text-lg text-muted-foreground mt-2">
-                {product.description || 'No description available'}
+                {product.description || "No description available"}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               <Badge variant="outline" className="text-sm">
                 <Tag className="h-4 w-4 mr-1" />
-                {product.category}
+                {product.brand}
               </Badge>
-              <Badge variant={product.status === 'Active' ? 'default' : 'secondary'}>
+              <Badge
+                variant={product.status === "Active" ? "default" : "secondary"}
+              >
                 {getStatusIcon()}
                 {product.status}
               </Badge>
@@ -155,7 +164,9 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-muted-foreground">Stock Quantity</p>
+                    <p className="text-sm text-muted-foreground">
+                      Stock Quantity
+                    </p>
                     <p className="text-3xl font-bold">{product.stock}</p>
                   </div>
                   <div>
@@ -183,24 +194,24 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
                 <div>
                   <p className="text-sm text-muted-foreground">Created</p>
                   <p className="font-medium">
-                    {product.createdAt.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
+                    {product.createdAt.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Last Updated</p>
                   <p className="font-medium">
-                    {product.updatedAt.toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
+                    {product.updatedAt.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </p>
                 </div>
@@ -217,7 +228,8 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
                   <div>
                     <p className="font-medium text-warning">Low Stock Alert</p>
                     <p className="text-sm text-muted-foreground">
-                      This product has low stock. Consider restocking soon to avoid going out of stock.
+                      This product has low stock. Consider restocking soon to
+                      avoid going out of stock.
                     </p>
                   </div>
                 </div>
@@ -234,7 +246,8 @@ export const ProductDetails = ({ product, open, onClose, onEdit }: ProductDetail
                   <div>
                     <p className="font-medium text-destructive">Out of Stock</p>
                     <p className="text-sm text-muted-foreground">
-                      This product is currently out of stock and unavailable for sale.
+                      This product is currently out of stock and unavailable for
+                      sale.
                     </p>
                   </div>
                 </div>

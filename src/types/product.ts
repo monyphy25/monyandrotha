@@ -10,15 +10,7 @@ export interface Product {
   updatedAt: Date;
 }
 
-export type ProductCategory = 
-  | 'Electronics'
-  | 'Clothing'
-  | 'Books'
-  | 'Home & Garden'
-  | 'Sports'
-  | 'Beauty'
-  | 'Automotive'
-  | 'Food & Beverages';
+export type ProductCategory = 'Skincare';
 
 export type ProductStatus = 'Active' | 'Inactive';
 

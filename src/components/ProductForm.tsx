@@ -45,7 +45,7 @@ export const ProductForm = ({
     name: '',
     description: '',
     price: '',
-    category: 'Electronics',
+    category: 'Skincare',
     status: 'Active',
     stock: ''
   });
@@ -67,7 +67,7 @@ export const ProductForm = ({
         name: '',
         description: '',
         price: '',
-        category: 'Electronics',
+        category: 'Skincare',
         status: 'Active',
         stock: ''
       });

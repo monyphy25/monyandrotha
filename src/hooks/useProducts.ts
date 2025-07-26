@@ -1,69 +1,199 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Product, ProductFilters, SortField, SortOrder } from '@/types/product';
-import { SAMPLE_PRODUCTS } from '@/data/sampleProducts';
-
-const STORAGE_KEY = 'product-management-products';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 export const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
-  // Load products from localStorage or use sample data
+  // Load products from Supabase
   useEffect(() => {
-    const loadProducts = () => {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsedProducts = JSON.parse(stored).map((p: any) => ({
-            ...p,
-            createdAt: new Date(p.createdAt),
-            updatedAt: new Date(p.updatedAt)
-          }));
-          setProducts(parsedProducts);
-        } else {
-          // Initialize with sample data
-          setProducts(SAMPLE_PRODUCTS);
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(SAMPLE_PRODUCTS));
-        }
-      } catch (error) {
-        console.error('Error loading products:', error);
-        setProducts(SAMPLE_PRODUCTS);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadProducts();
   }, []);
 
-  // Save products to localStorage whenever products change
-  useEffect(() => {
-    if (products.length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  const loadProducts = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        toast({
+          title: "Error loading products",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const formattedProducts = data.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        price: p.price,
+        category: p.category as 'Skincare',
+        status: p.status as 'Active' | 'Inactive',
+        stock: p.stock,
+        createdAt: new Date(p.created_at),
+        updatedAt: new Date(p.updated_at)
+      }));
+
+      setProducts(formattedProducts);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      toast({
+        title: "Error loading products",
+        description: "Failed to load products from database",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  }, [products]);
-
-  const addProduct = (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newProduct: Product = {
-      ...productData,
-      id: generateId(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    setProducts(prev => [newProduct, ...prev]);
-    return newProduct;
   };
 
-  const updateProduct = (id: string, updates: Partial<Omit<Product, 'id' | 'createdAt'>>) => {
-    setProducts(prev => prev.map(product => 
-      product.id === id 
-        ? { ...product, ...updates, updatedAt: new Date() }
-        : product
-    ));
+  const addProduct = async (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([
+          {
+            name: productData.name,
+            description: productData.description,
+            price: productData.price,
+            category: productData.category,
+            status: productData.status,
+            stock: productData.stock
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        toast({
+          title: "Error adding product",
+          description: error.message,
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      const newProduct: Product = {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        category: data.category as 'Skincare',
+        status: data.status as 'Active' | 'Inactive',
+        stock: data.stock,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
+
+      setProducts(prev => [newProduct, ...prev]);
+      toast({
+        title: "Product added successfully",
+        description: `${newProduct.name} has been added to your catalog`,
+      });
+      return newProduct;
+    } catch (error) {
+      console.error('Error adding product:', error);
+      toast({
+        title: "Error adding product",
+        description: "Failed to add product to database",
+        variant: "destructive",
+      });
+      return null;
+    }
   };
 
-  const deleteProduct = (id: string) => {
-    setProducts(prev => prev.filter(product => product.id !== id));
+  const updateProduct = async (id: string, updates: Partial<Omit<Product, 'id' | 'createdAt'>>) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .update({
+          name: updates.name,
+          description: updates.description,
+          price: updates.price,
+          category: updates.category,
+          status: updates.status,
+          stock: updates.stock
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        toast({
+          title: "Error updating product",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const updatedProduct: Product = {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        category: data.category as 'Skincare',
+        status: data.status as 'Active' | 'Inactive',
+        stock: data.stock,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at)
+      };
+
+      setProducts(prev => prev.map(product => 
+        product.id === id ? updatedProduct : product
+      ));
+
+      toast({
+        title: "Product updated successfully",
+        description: `${updatedProduct.name} has been updated`,
+      });
+    } catch (error) {
+      console.error('Error updating product:', error);
+      toast({
+        title: "Error updating product",
+        description: "Failed to update product in database",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        toast({
+          title: "Error deleting product",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setProducts(prev => prev.filter(product => product.id !== id));
+      toast({
+        title: "Product deleted successfully",
+        description: "The product has been removed from your catalog",
+      });
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast({
+        title: "Error deleting product",
+        description: "Failed to delete product from database",
+        variant: "destructive",
+      });
+    }
   };
 
   const getProduct = (id: string) => {
@@ -83,7 +213,8 @@ export const useProducts = () => {
     updateProduct,
     deleteProduct,
     getProduct,
-    isNameUnique
+    isNameUnique,
+    loadProducts
   };
 };
 
@@ -164,8 +295,4 @@ export const useFilteredProducts = (
 
     return filtered;
   }, [products, filters, sortField, sortOrder, searchDebounce]);
-};
-
-const generateId = (): string => {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };

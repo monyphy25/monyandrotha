@@ -52,7 +52,7 @@ export const ProductManagement = () => {
   // State for filters and search
   const [filters, setFilters] = useState<ProductFilters>({
     search: '',
-    categories: ['Beauty'],
+    categories: ['Skincare'],
     status: 'all',
     priceMin: undefined,
     priceMax: undefined,

@@ -15,20 +15,20 @@
     --popover: 0 0% 100%;
     --popover-foreground: 213 31% 14%;
 
-    /* Blue primary scheme for business application */
-    --primary: 213 94% 50%;
+    /* Pink primary scheme for cute application */
+    --primary: 330 81% 60%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 213 94% 45%;
-    --primary-light: 213 94% 95%;
+    --primary-hover: 330 81% 55%;
+    --primary-light: 330 81% 95%;
 
-    --secondary: 213 27% 84%;
-    --secondary-foreground: 213 31% 14%;
+    --secondary: 330 27% 84%;
+    --secondary-foreground: 330 31% 14%;
 
-    --muted: 213 27% 96%;
-    --muted-foreground: 213 16% 46%;
+    --muted: 330 27% 96%;
+    --muted-foreground: 330 16% 46%;
 
-    --accent: 213 100% 96%;
-    --accent-foreground: 213 94% 50%;
+    --accent: 330 100% 96%;
+    --accent-foreground: 330 81% 60%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -42,9 +42,9 @@
     --warning-foreground: 0 0% 100%;
     --warning-light: 38 92% 95%;
 
-    --border: 213 27% 91%;
-    --input: 213 27% 91%;
-    --ring: 213 94% 50%;
+    --border: 330 27% 91%;
+    --input: 330 27% 91%;
+    --ring: 330 81% 60%;
 
     --radius: 0.5rem;
 
@@ -75,11 +75,11 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    /* Dark mode blue theme */
-    --primary: 213 94% 68%;
+    /* Dark mode pink theme */
+    --primary: 330 81% 68%;
     --primary-foreground: 222.2 84% 4.9%;
-    --primary-hover: 213 94% 73%;
-    --primary-light: 213 94% 15%;
+    --primary-hover: 330 81% 73%;
+    --primary-light: 330 81% 15%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;

@@ -87,126 +87,144 @@ export const ProductList = ({
 
   return (
     <div className="border rounded-lg overflow-hidden bg-card">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[250px]">
-              <Button
-                variant="ghost"
-                onClick={() => onSort("name")}
-                className="h-auto p-0 hover:bg-transparent"
-              >
-                Name {getSortIcon("name")}
-              </Button>
-            </TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => onSort("price")}
-                className="h-auto p-0 hover:bg-transparent"
-              >
-                Price {getSortIcon("price")}
-              </Button>
-            </TableHead>
-            <TableHead>Brand</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => onSort("stock")}
-                className="h-auto p-0 hover:bg-transparent"
-              >
-                Stock {getSortIcon("stock")}
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => onSort("createdAt")}
-                className="h-auto p-0 hover:bg-transparent"
-              >
-                Created {getSortIcon("createdAt")}
-              </Button>
-            </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product) => {
-            const isLowStock = product.stock > 0 && product.stock < 10;
-            const isOutOfStock = product.stock === 0;
+      <div className="overflow-x-auto scrollbar-thin">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[200px] sm:w-[250px]">
+                <Button
+                  variant="ghost"
+                  onClick={() => onSort("name")}
+                  className="h-auto p-0 hover:bg-transparent text-xs sm:text-sm"
+                >
+                  Name {getSortIcon("name")}
+                </Button>
+              </TableHead>
+              <TableHead className="hidden sm:table-cell">
+                Description
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => onSort("price")}
+                  className="h-auto p-0 hover:bg-transparent text-xs sm:text-sm"
+                >
+                  Price {getSortIcon("price")}
+                </Button>
+              </TableHead>
+              <TableHead className="min-w-[80px] sm:min-w-[100px]">
+                Brand
+              </TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  onClick={() => onSort("stock")}
+                  className="h-auto p-0 hover:bg-transparent text-xs sm:text-sm"
+                >
+                  Stock {getSortIcon("stock")}
+                </Button>
+              </TableHead>
+              <TableHead className="hidden sm:table-cell">
+                <Button
+                  variant="ghost"
+                  onClick={() => onSort("createdAt")}
+                  className="h-auto p-0 hover:bg-transparent text-xs sm:text-sm"
+                >
+                  Created {getSortIcon("createdAt")}
+                </Button>
+              </TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {products.map((product) => {
+              const isLowStock = product.stock > 0 && product.stock < 10;
+              const isOutOfStock = product.stock === 0;
 
-            return (
-              <TableRow key={product.id} className="hover:bg-muted/50">
-                <TableCell className="font-medium">
-                  <button
-                    onClick={() => onView(product)}
-                    className="text-left hover:text-primary transition-colors"
-                  >
-                    {product.name}
-                  </button>
-                </TableCell>
-                <TableCell className="max-w-[200px]">
-                  <span className="line-clamp-2 text-sm text-muted-foreground">
-                    {product.description || "No description"}
-                  </span>
-                </TableCell>
-                <TableCell className="font-semibold text-primary">
-                  ${product.price.toFixed(2)}
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">{product.brand}</Badge>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={getStatusBadgeVariant(product.status)}>
-                    {product.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={getStockBadgeVariant(product.stock)}>
-                      {isOutOfStock ? "Out of Stock" : product.stock}
-                    </Badge>
-                    {isLowStock && (
-                      <AlertTriangle className="h-4 w-4 text-warning" />
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {product.createdAt.toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1 justify-end">
-                    <Button
-                      size="xs"
-                      variant="ghost"
+              return (
+                <TableRow key={product.id} className="hover:bg-muted/50">
+                  <TableCell className="font-medium">
+                    <button
                       onClick={() => onView(product)}
+                      className="text-left hover:text-primary transition-colors text-sm sm:text-base"
                     >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      onClick={() => onEdit(product)}
+                      {product.name}
+                    </button>
+                  </TableCell>
+                  <TableCell className="max-w-[150px] sm:max-w-[200px] hidden sm:table-cell">
+                    <span className="line-clamp-2 text-xs sm:text-sm text-muted-foreground">
+                      {product.description || "No description"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-semibold text-primary text-sm sm:text-base">
+                    ${product.price.toFixed(2)}
+                  </TableCell>
+                  <TableCell className="min-w-[80px] sm:min-w-[100px]">
+                    <Badge
+                      variant="outline"
+                      className="text-xs px-2 py-1 max-w-[70px] sm:max-w-[90px] truncate"
+                      title={product.brand}
                     >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="xs"
-                      variant="ghost"
-                      onClick={() => onDelete(product)}
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      {product.brand}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={getStatusBadgeVariant(product.status)}
+                      className="text-xs px-2 py-1"
                     >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                      {product.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <Badge
+                        variant={getStockBadgeVariant(product.stock)}
+                        className="text-xs px-2 py-1"
+                      >
+                        {isOutOfStock ? "Out of Stock" : product.stock}
+                      </Badge>
+                      {isLowStock && (
+                        <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-warning" />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-xs sm:text-sm text-muted-foreground hidden sm:table-cell">
+                    {product.createdAt.toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 justify-end">
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => onView(product)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => onEdit(product)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="xs"
+                        variant="ghost"
+                        onClick={() => onDelete(product)}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

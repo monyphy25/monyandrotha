@@ -179,12 +179,12 @@ export const ProductForm = ({
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+        <DialogHeader className="mt-4 sm:mt-0">
           <DialogTitle>
             {product ? "Edit Product" : "Add New Product"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="pt-2 sm:pt-0">
             {product
               ? "Make changes to the product information below."
               : "Fill in the details below to create a new product."}
@@ -280,15 +280,25 @@ export const ProductForm = ({
               onValueChange={(value) =>
                 handleBrandOptionChange(value as "existing" | "new")
               }
-              className="flex gap-6"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6"
             >
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="existing" id="existing-brand" />
-                <Label htmlFor="existing-brand">Select Existing Brand</Label>
+                <Label
+                  htmlFor="existing-brand"
+                  className="text-sm sm:text-base cursor-pointer"
+                >
+                  Select Existing Brand
+                </Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="new" id="new-brand" />
-                <Label htmlFor="new-brand">Add New Brand</Label>
+                <Label
+                  htmlFor="new-brand"
+                  className="text-sm sm:text-base cursor-pointer"
+                >
+                  Add New Brand
+                </Label>
               </div>
             </RadioGroup>
 
@@ -300,11 +310,13 @@ export const ProductForm = ({
                   onValueChange={(value) => handleInputChange("brand", value)}
                 >
                   <SelectTrigger
-                    className={errors.brand ? "border-destructive" : ""}
+                    className={`w-full ${
+                      errors.brand ? "border-destructive" : ""
+                    }`}
                   >
                     <SelectValue placeholder="Search and select a brand" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60">
+                  <SelectContent className="max-h-60 scrollbar-thin w-[var(--radix-select-trigger-width)] min-w-[200px] sm:min-w-[250px]">
                     {/* Search Input */}
                     <div className="flex items-center px-3 pb-2">
                       <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
@@ -312,24 +324,36 @@ export const ProductForm = ({
                         placeholder="Search brands..."
                         value={brandSearch}
                         onChange={(e) => setBrandSearch(e.target.value)}
-                        className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
                       />
                     </div>
                     <div className="border-t" />
                     {/* Brand Options */}
                     {filteredBrands.length > 0 ? (
-                      filteredBrands.map((brand) => (
-                        <SelectItem key={brand} value={brand}>
-                          {brand}
-                        </SelectItem>
-                      ))
+                      <div className="max-h-48 overflow-y-auto">
+                        {filteredBrands.map((brand) => (
+                          <SelectItem
+                            key={brand}
+                            value={brand}
+                            className="text-sm"
+                          >
+                            {brand}
+                          </SelectItem>
+                        ))}
+                      </div>
                     ) : (
-                      <SelectItem value="" disabled>
+                      <SelectItem value="" disabled className="text-sm">
                         No brands found
                       </SelectItem>
                     )}
                   </SelectContent>
                 </Select>
+                {existingBrands.length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    No existing brands found. Switch to "Add New Brand" to
+                    create one.
+                  </p>
+                )}
               </div>
             )}
 
@@ -340,8 +364,13 @@ export const ProductForm = ({
                   value={formData.brand}
                   onChange={(e) => handleInputChange("brand", e.target.value)}
                   placeholder="Enter new brand name"
-                  className={errors.brand ? "border-destructive" : ""}
+                  className={`w-full ${
+                    errors.brand ? "border-destructive" : ""
+                  }`}
                 />
+                <p className="text-xs text-muted-foreground">
+                  Enter the name of a new brand to add to your collection.
+                </p>
               </div>
             )}
 
@@ -391,6 +420,7 @@ export const ProductForm = ({
               variant="outline"
               onClick={onClose}
               disabled={isLoading}
+              className="mt-2 sm:mt-0"
             >
               Cancel
             </Button>

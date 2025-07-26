@@ -144,34 +144,72 @@ export const FilterPanel = ({
           {availableBrands.length > 0 ? (
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full justify-between">
-                  {filters.brands.length === 0
-                    ? "Select brands"
-                    : `${filters.brands.length} selected`}
-                  <ChevronDown className="h-4 w-4 opacity-50" />
+                <Button
+                  variant="outline"
+                  className="w-full justify-between text-sm sm:text-base h-10 sm:h-9"
+                >
+                  <span className="truncate">
+                    {filters.brands.length === 0
+                      ? "Select brands"
+                      : filters.brands.length === 1
+                      ? filters.brands[0]
+                      : `${filters.brands.length} selected`}
+                  </span>
+                  <ChevronDown className="h-4 w-4 opacity-50 shrink-0 ml-2" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-full p-4" align="start">
-                <div className="space-y-3 max-h-60 overflow-y-auto">
+              <PopoverContent
+                className="w-full p-3 sm:p-4 scrollbar-thin"
+                align="start"
+                side="bottom"
+                sideOffset={4}
+              >
+                <div className="space-y-2 max-h-48 sm:max-h-60 overflow-y-auto">
                   {availableBrands.map((brand) => (
-                    <div key={brand} className="flex items-center space-x-2">
+                    <div
+                      key={brand}
+                      className="flex items-center space-x-2 py-1"
+                    >
                       <Checkbox
                         id={brand}
                         checked={filters.brands.includes(brand)}
                         onCheckedChange={(checked) =>
                           handleBrandChange(brand, checked as boolean)
                         }
+                        className="shrink-0"
                       />
-                      <Label htmlFor={brand} className="text-sm cursor-pointer">
+                      <Label
+                        htmlFor={brand}
+                        className="text-sm cursor-pointer flex-1 truncate hover:text-foreground transition-colors"
+                      >
                         {brand}
                       </Label>
                     </div>
                   ))}
                 </div>
+                {filters.brands.length > 0 && (
+                  <div className="pt-2 border-t mt-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() =>
+                        onFiltersChange({ ...filters, brands: [] })
+                      }
+                      className="w-full text-xs h-8"
+                    >
+                      Clear All Brands
+                    </Button>
+                  </div>
+                )}
               </PopoverContent>
             </Popover>
           ) : (
-            <p className="text-sm text-muted-foreground">No brands available</p>
+            <div className="text-sm text-muted-foreground p-3 border rounded-md bg-muted/50">
+              <p className="text-center">No brands available</p>
+              <p className="text-xs text-center mt-1">
+                Add products to see brand options
+              </p>
+            </div>
           )}
         </div>
 

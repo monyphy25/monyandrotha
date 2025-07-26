@@ -72,21 +72,13 @@ export const ProductDetails = ({
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-thin">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onClose}
-                className="h-8 w-8 p-0"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
               Product Details
             </DialogTitle>
-            <Button onClick={() => onEdit(product)}>
+            <Button className="mr-10" onClick={() => onEdit(product)}>
               <Edit className="h-4 w-4" />
               Edit Product
             </Button>
@@ -113,13 +105,9 @@ export const ProductDetails = ({
               <Badge
                 variant={product.status === "Active" ? "default" : "secondary"}
               >
-                {getStatusIcon()}
                 {product.status}
               </Badge>
-              <Badge variant={stockStatus.variant}>
-                {stockStatus.icon}
-                {stockStatus.text}
-              </Badge>
+              <Badge variant={stockStatus.variant}>{stockStatus.text}</Badge>
             </div>
           </div>
 

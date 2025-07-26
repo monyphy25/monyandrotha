@@ -49,22 +49,33 @@ export const ProductCard = ({
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
             <h3
-              className="font-semibold text-lg truncate cursor-pointer hover:text-primary transition-colors"
+              className="font-semibold text-base sm:text-lg truncate cursor-pointer hover:text-primary transition-colors"
               onClick={() => onView(product)}
               title={product.name}
             >
               {product.name}
             </h3>
             <p
-              className="text-sm text-muted-foreground mt-1 line-clamp-2"
+              className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2"
               title={product.description}
             >
               {product.description || "No description available"}
             </p>
           </div>
-          <div className="flex flex-col gap-2 items-end">
-            <Badge variant={getStatusBadgeVariant()}>{product.status}</Badge>
-            <Badge variant="outline">{product.brand}</Badge>
+          <div className="flex flex-col gap-1 sm:gap-2 items-end">
+            <Badge
+              variant={getStatusBadgeVariant()}
+              className="text-xs px-2 py-1"
+            >
+              {product.status}
+            </Badge>
+            <Badge
+              variant="outline"
+              className="text-xs px-2 py-1 max-w-[80px] sm:max-w-[100px] truncate"
+              title={product.brand}
+            >
+              {product.brand}
+            </Badge>
           </div>
         </div>
       </CardHeader>

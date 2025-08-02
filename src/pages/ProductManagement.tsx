@@ -39,6 +39,7 @@ import {
   SortDesc,
   Package,
   Loader2,
+  Users,
 } from "lucide-react";
 
 const ITEMS_PER_PAGE_OPTIONS = [6, 12, 24, 48];
@@ -218,27 +219,23 @@ export const ProductManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto py-8 px-4 space-y-8 overflow-y-auto">
+    <div className="min-h-screen bg-background mt-5">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 overflow-y-auto">
         {/* Header */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-                <Package className="h-8 w-8 text-primary" />
-                <span className="bg-gradient-to-r from-primary via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Skin Studio System
-                </span>
-              </h1>
-              <p className="text-muted-foreground mt-1">
+              <p className="text-muted-foreground">
                 Manage your product inventory with advanced filtering and search
                 capabilities
               </p>
             </div>
-            <Button onClick={handleAddProduct} size="lg" className="shrink-0">
-              <Plus className="h-5 w-5" />
-              Add Product
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleAddProduct} size="lg" className="shrink-0">
+                <Plus className="h-5 w-5" />
+                Add Product
+              </Button>
+            </div>
           </div>
 
           {/* Search and View Controls */}
